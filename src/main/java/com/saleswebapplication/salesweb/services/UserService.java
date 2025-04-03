@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.saleswebapplication.salesweb.entities.User;
 import com.saleswebapplication.salesweb.repositories.UserRepository;
+import com.saleswebapplication.salesweb.services.exceptions.ResourceNotFoundException;
 
 //Essa anotattion, assim como a Component, registra o serviço
 @Service
@@ -22,7 +23,8 @@ public class UserService {
 	
 	public User findById(Long id) {
 		Optional<User> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+		//return obj.get();
 	}
 
 	public User insert(User obj) {
