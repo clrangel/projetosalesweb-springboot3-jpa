@@ -13,6 +13,8 @@ import com.saleswebapplication.salesweb.repositories.UserRepository;
 import com.saleswebapplication.salesweb.services.exceptions.DatabaseException;
 import com.saleswebapplication.salesweb.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 //Essa anotattion, assim como a Component, registra o serviço
 @Service
 public class UserService {
@@ -46,9 +48,13 @@ public class UserService {
 	}
 	
 	public User update(Long id, User obj) {
+		try {
 		User entity = repository.getReferenceById(id);
 		updateData(entity, obj);
 		return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(User entity, User obj) {
